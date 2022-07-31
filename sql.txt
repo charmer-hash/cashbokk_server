@@ -1,0 +1,37 @@
+-- bill.`user` definition
+
+CREATE TABLE `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `createtime` varchar(100) NOT NULL,
+  `avatar` varchar(100) NOT NULL,
+  `signature` varchar(100) DEFAULT NULL COMMENT '个性签名',
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- bill.bill definition
+
+CREATE TABLE `bill` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pay_type` int NOT NULL,
+  `amount` varchar(100) NOT NULL,
+  `date` varchar(100) NOT NULL,
+  `type_id` int NOT NULL,
+  `type_name` varchar(100) NOT NULL,
+  `user_id` int NOT NULL,
+  `remake` varchar(100) NOT NULL COMMENT '账单备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- bill.`type` definition
+
+CREATE TABLE `type` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `type` int NOT NULL,
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
