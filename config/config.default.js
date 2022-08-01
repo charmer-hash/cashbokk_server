@@ -26,13 +26,23 @@ module.exports = appInfo => {
     domainWhiteList: [ '*' ], // 配置白名单
   };
 
+  // 自定义加密字符串
+  config.jwt = {
+    secret: 'ygy',
+  };
+  /*
+  secret 加密字符串，将在后续用于结合用户信息生成一串 token。
+  secret 是放在服务端代码中，普通用户是无法通过浏览器发现的，
+  所以千万不能将其泄漏，否则有可能会被不怀好意的人加以利用 
+   */
+
   // 以下的配置，指的是将view文件夹下的 .html后缀文件识别为 .ejs
   config.view = {
     mapping: { '.html': 'ejs' },
   };
 
   // 单数据库信息配置
-  exports.mysql = {
+  config.mysql = {
     // 单数据库信息配置
     client: {
       // host
@@ -44,7 +54,7 @@ module.exports = appInfo => {
       // 密码
       password: '123456',
       // 数据库名
-      database: 'test',
+      database: 'bill',
     },
     // 是否加载到 app 上，默认开启
     app: true,
