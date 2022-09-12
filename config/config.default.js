@@ -41,6 +41,10 @@ module.exports = appInfo => {
     mapping: { '.html': 'ejs' },
   };
 
+  config.multipart = {
+    mode:'file'
+  };
+
   // 单数据库信息配置
   config.mysql = {
     // 单数据库信息配置
@@ -64,8 +68,16 @@ module.exports = appInfo => {
 
   // add your user config here
   const userConfig = {
-    // myAppName: 'egg',
+    myAppName: 'cashBook',
+    uploadDir: 'app/public/upload'
   };
+
+  config.cors = {
+    origin: '*', // 允许所有跨域访问
+    credentials: true, // 允许 Cookie 跨域跨域
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+  };
+
 
 
   return {

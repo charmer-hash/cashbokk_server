@@ -7,7 +7,7 @@ const defaultAvatar = 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247
 class UserController extends Controller {
   async register() {
     const { ctx } = this;
-    const { username, password } = ctx.request.body;
+    const { username, password, signature } = ctx.request.body;
     // 判空操作
     if (!username || !password) {
       ctx.body = {
@@ -35,7 +35,7 @@ class UserController extends Controller {
       username,
       createTime,
       password,
-      signature: 'I LOVE YOU',
+      signature: signature || 'I LOVE YOU',
       avatar: defaultAvatar
      })
      result ? ctx.body = {
@@ -109,6 +109,65 @@ class UserController extends Controller {
       data: {
         ...decode
       }
+    }
+  }
+
+  // 获取用户信息
+  async getUserInfo() {
+    const { ctx, app } = this;
+    const token = ctx.request.header.authorization;
+    // 通过 app.jwt.verify方法，解析出token内的用户信息
+    const decode = await app.jwt.verify(token, app.config.jwt.secret);
+    // 通过getUserByName方法，以用户名decod.userName为参数，从数据库获取到该用户下的相关信息
+    const userInfo = await ctx.service.user.getUserByName(decode.username);
+    // userInfo中有密码信息，所以我们不穿密码
+    ctx.body = {
+       code: 200,
+       msg: '请求成功',
+       data: {
+         id: userInfo.id,
+         username:userInfo.name,
+         signature: userInfo.signature || '',
+         avatar: userInfo.avatar || defaultAvatar,
+       }
+    }
+  }
+
+  // 修改用户信息（签名）
+  async editUserInfo() {
+    const { ctx, app } = this;
+    // 通过post请求，在请求体中获取签名字段，signature
+    const { signature = '', avatar = '' } = ctx.request.body;
+
+    try {
+      let user_id;
+      const token = ctx.request.header.authorization;
+      // 解密token中的用户名称
+      const decode = await app.jwt.verify(token, app.config.jwt.authorization);
+      if (!decode) return;
+      user_id = decode?.id
+      // 通过username查找userInfo完整信息
+      const userInfo = await ctx.service.user.getUserByName(decode.username);
+      const result = await ctx.service.user.editUserInfo({
+        ...userInfo,
+        signature,
+        avatar
+      });
+
+      ctx.body = {
+        code: 200,
+        msg: '请求成功',
+        data: {
+          id: user_id,
+          signature,
+          username: userInfo.username,
+          avatar
+        }
+      }
+
+    } catch (error) {
+      console.log('error', error);
+
     }
   }
 
